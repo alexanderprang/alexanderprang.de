@@ -1,0 +1,26 @@
+name: SFTP Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sftp-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Repository auschecken
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Dateien über SFTP hochladen
+      - name: Upload files via SFTP
+        uses: appleboy/scp-action@v0.1.5
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 22 # Standard-SFTP-Port
+          source: ./ # Lokales Verzeichnis
+          target: /httpdocs/alexanderprang.de # Zielverzeichnis auf dem Server
