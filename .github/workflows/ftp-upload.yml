@@ -14,25 +14,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Lose Dateien direkt im Root entfernen, die lokal nicht mehr existieren
-      # (Unterordner wie games/ bleiben unberührt)
-      - name: Remove orphaned root files
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 22
-          script: |
-            find /alexanderprang.de/httpdocs -maxdepth 1 -type f -delete
-
-      # Dateien über SFTP hochladen
-      - name: Upload files via SFTP
-        uses: appleboy/scp-action@v0.1.5
-        with:
-          host: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 22 # Standard-SFTP-Port
-          source: ./ # Lokales Verzeichnis
-          target: /alexanderprang.de/httpdocs # Zielverzeichnis auf dem Server
+      # Spiegelt das Repo per rsync auf den Server: neue/geänderte Dateien
+      # werden hochgeladen, Dateien und Ordner, die lokal nicht mehr
+      # existieren, werden auf dem Server entfernt (egal auf welcher Ebene).
+      - name: Mirror files via rsync over SSH
+        run: |
+          sudo apt-get update && sudo apt-get install -y sshpass
+          sshpass -p "${{ secrets.FTP_PASSWORD }}" rsync -avz --delete \
+            --exclude=".git/" --exclude=".github/" \
+            -e "ssh -o StrictHostKeyChecking=no -p 22" \
+            ./ "${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}:/alexanderprang.de/httpdocs/"
