@@ -43,12 +43,76 @@ select {
 }
 
 .stage {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
   width: min(1120px, 100%);
   overflow: hidden;
   border: 1px solid rgba(25, 32, 42, 0.12);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.82);
   box-shadow: var(--shadow);
+}
+
+.side-menu {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: 28px 20px;
+  border-right: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.side-menu-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 4px;
+  padding: 0 12px;
+  color: var(--accent);
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.side-menu-title span {
+  font-size: 1.5rem;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.side-menu-group {
+  margin: 12px 0 0;
+  padding: 0 12px;
+  color: var(--muted);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.side-menu-link {
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.side-menu-link:hover {
+  background: #f2fbf8;
+  color: var(--accent-strong);
+}
+
+.side-menu-link.is-current {
+  color: var(--accent);
+  background: #f2fbf8;
+}
+
+.stage-main {
+  min-width: 0;
 }
 
 .topbar {
@@ -86,6 +150,7 @@ h1 {
   color: var(--accent-strong);
   background: var(--surface);
   cursor: pointer;
+  text-decoration: none;
   font-size: 1.6rem;
   transition:
     transform 160ms ease,
@@ -97,6 +162,65 @@ h1 {
   transform: translateY(-1px);
   border-color: var(--accent);
   background: #f2fbf8;
+}
+
+.home-board {
+  display: grid;
+  gap: 24px;
+  padding: clamp(22px, 4vw, 44px);
+}
+
+.home-intro {
+  margin: 0;
+  color: var(--accent);
+  font-size: 1.4rem;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.home-card {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  color: var(--ink);
+  background: var(--surface);
+  text-decoration: none;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.home-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 10px 24px rgba(11, 107, 104, 0.14);
+}
+
+.home-card-icon {
+  width: 36px;
+  height: 40px;
+  fill: none;
+  stroke: var(--accent-strong);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 9;
+}
+
+.home-card-title {
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+.home-card-desc {
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .game-board {
@@ -121,7 +245,8 @@ h1 {
     repeating-linear-gradient(0deg, transparent 0 28px, rgba(11, 107, 104, 0.08) 29px 30px);
 }
 
-.fail-sticker {
+.fail-sticker,
+.success-sticker {
   position: absolute;
   top: 34px;
   right: 34px;
@@ -146,7 +271,31 @@ h1 {
     rotate 180ms ease;
 }
 
+.fail-sticker {
+  border-color: var(--danger);
+  color: var(--danger);
+  box-shadow: 0 10px 24px rgba(190, 58, 52, 0.22);
+}
+
+.success-sticker {
+  display: grid;
+  width: clamp(68px, 10vw, 96px);
+  height: clamp(68px, 10vw, 96px);
+  place-items: center;
+  border-color: var(--success);
+  border-radius: 50%;
+  color: var(--success);
+  box-shadow: 0 10px 24px rgba(38, 114, 79, 0.22);
+  font-size: clamp(2.4rem, 6vw, 4rem);
+}
+
 .stage.is-lost .fail-sticker {
+  opacity: 1;
+  rotate: -8deg;
+  scale: 1;
+}
+
+.stage.is-won .success-sticker {
   opacity: 1;
   rotate: -8deg;
   scale: 1;
@@ -362,9 +511,91 @@ select {
   border-left-color: var(--danger);
 }
 
+.ttt-board-area {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(240px, 0.7fr);
+  gap: clamp(22px, 4vw, 44px);
+  padding: clamp(22px, 4vw, 44px);
+}
+
+.ttt-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 1;
+  margin-inline: auto;
+}
+
+.ttt-cell {
+  display: grid;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 900;
+  transition:
+    transform 120ms ease,
+    border-color 120ms ease,
+    background 120ms ease;
+}
+
+.ttt-cell:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+}
+
+.ttt-cell:disabled {
+  cursor: not-allowed;
+}
+
+.ttt-cell.is-x {
+  color: var(--accent);
+}
+
+.ttt-cell.is-o {
+  color: var(--danger);
+}
+
+.ttt-cell.is-winning {
+  border-color: var(--success);
+  background: #f2fbf8;
+}
+
+.ttt-side {
+  display: grid;
+  align-content: start;
+  gap: 24px;
+}
+
 @media (max-width: 780px) {
+  .ttt-board-area {
+    grid-template-columns: 1fr;
+  }
+
   .game-shell {
     padding: 16px;
+  }
+
+  .stage {
+    grid-template-columns: 1fr;
+  }
+
+  .side-menu {
+    grid-auto-flow: column;
+    justify-content: start;
+    gap: 8px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .side-menu-title {
+    display: none;
   }
 
   .topbar {

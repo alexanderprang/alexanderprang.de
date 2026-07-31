@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Galgen-Männchen</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="game-shell" aria-labelledby="game-title">
+      <section class="stage" aria-label="Galgen-Männchen Spielfläche">
+        <nav class="side-menu" aria-label="Menü">
+          <h2 class="side-menu-title">Menü <span aria-hidden="true">☰</span></h2>
+          <a class="side-menu-link" href="index.html">Startseite</a>
+
+          <h3 class="side-menu-group">Spiele</h3>
+          <a class="side-menu-link is-current" href="galgenmaennchen.html">Galgen-Männchen</a>
+          <a class="side-menu-link" href="tictactoe.html">Tic Tac Toe</a>
+        </nav>
+
+        <div class="stage-main">
+          <div class="topbar">
+            <div>
+              <p class="eyebrow">Wortspiel</p>
+              <h1 id="game-title">Galgen-Männchen</h1>
+            </div>
+            <button class="icon-button" id="new-round" type="button" aria-label="Neue Runde" title="Neue Runde">
+              ↻
+            </button>
+          </div>
+
+          <div class="game-board">
+            <div class="drawing-panel">
+              <div class="fail-sticker" id="fail-sticker" aria-hidden="true">Fail</div>
+              <div class="success-sticker" id="success-sticker" aria-hidden="true">Win</div>
+
+              <svg class="hangman" viewBox="0 0 240 260" role="img" aria-labelledby="drawing-title">
+                <title id="drawing-title">Galgenzeichnung</title>
+                <line x1="30" y1="235" x2="210" y2="235" class="gallows" data-gallows-part="0" />
+                <line x1="65" y1="235" x2="65" y2="30" class="gallows" data-gallows-part="1" />
+                <line x1="64" y1="30" x2="168" y2="30" class="gallows" data-gallows-part="2" />
+                <line x1="168" y1="30" x2="168" y2="62" class="gallows" data-gallows-part="3" />
+                <line x1="65" y1="78" x2="112" y2="30" class="gallows brace" data-gallows-support />
+
+                <circle cx="168" cy="86" r="23" class="body-part" data-part="0" />
+                <line x1="168" y1="109" x2="168" y2="166" class="body-part" data-part="1" />
+                <line x1="168" y1="126" x2="134" y2="149" class="body-part" data-part="2" />
+                <line x1="168" y1="126" x2="202" y2="149" class="body-part" data-part="3" />
+                <line x1="168" y1="166" x2="139" y2="207" class="body-part" data-part="4" />
+                <line x1="168" y1="166" x2="197" y2="207" class="body-part" data-part="5" />
+              </svg>
+
+              <div class="status-card" aria-live="polite">
+                <span id="status-label">Bereit</span>
+                <strong id="status-text">Errate das Wort, bevor die Zeichnung komplett ist.</strong>
+              </div>
+            </div>
+
+            <div class="play-panel">
+              <div class="settings">
+                <div class="controls">
+                  <label for="category">Kategorie</label>
+                  <select id="category">
+                    <option value="all">Gemischt</option>
+                    <option value="natur">Natur</option>
+                    <option value="stadt">Stadt</option>
+                    <option value="technik">Technik</option>
+                    <option value="essen">Essen</option>
+                  </select>
+                </div>
+
+                <div class="controls">
+                  <label for="difficulty">Schwierigkeit</label>
+                  <select id="difficulty">
+                    <option value="easy">Einfach</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="hard">Schwer</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="word" id="word" aria-label="Gesuchtes Wort"></div>
+
+              <div class="stats" aria-label="Spielstand">
+                <div>
+                  <span>Fehler</span>
+                  <strong id="mistakes">0 / 6</strong>
+                </div>
+                <div>
+                  <span>Versucht</span>
+                  <strong id="attempts">0</strong>
+                </div>
+              </div>
+
+              <div class="keyboard" id="keyboard" aria-label="Buchstabentastatur"></div>
+
+              <p class="hint" id="hint">Tipp: Du kannst auch deine Tastatur benutzen.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

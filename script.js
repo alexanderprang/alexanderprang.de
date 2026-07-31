@@ -24,6 +24,7 @@ const categoryEl = document.querySelector("#category");
 const difficultyEl = document.querySelector("#difficulty");
 const newRoundButton = document.querySelector("#new-round");
 const failStickerEl = document.querySelector("#fail-sticker");
+const successStickerEl = document.querySelector("#success-sticker");
 const gallowsParts = [...document.querySelectorAll("[data-gallows-part]")];
 const gallowsSupport = document.querySelector("[data-gallows-support]");
 const bodyParts = [...document.querySelectorAll(".body-part")];
@@ -119,6 +120,14 @@ function setStatus(label, text) {
 }
 
 function playFailTone() {
+  playTone([220, 165], "square", 0.22, 0.42);
+}
+
+function playRightTone() {
+  playTone([392, 523, 659], "sine", 0.16, 0.5);
+}
+
+function playTone(frequencies, type, noteLength, fadeLength) {
   const AudioContext = window.AudioContext || window.webkitAudioContext;
 
   if (!AudioContext) {
@@ -130,18 +139,18 @@ function playFailTone() {
   gain.connect(audioContext.destination);
   gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.22, audioContext.currentTime + 0.02);
-  gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.42);
+  gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + fadeLength);
 
-  [220, 165].forEach((frequency, index) => {
+  frequencies.forEach((frequency, index) => {
     const oscillator = audioContext.createOscillator();
-    oscillator.type = "square";
+    oscillator.type = type;
     oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime + index * 0.16);
     oscillator.connect(gain);
     oscillator.start(audioContext.currentTime + index * 0.16);
-    oscillator.stop(audioContext.currentTime + index * 0.16 + 0.22);
+    oscillator.stop(audioContext.currentTime + index * 0.16 + noteLength);
   });
 
-  window.setTimeout(() => audioContext.close(), 520);
+  window.setTimeout(() => audioContext.close(), (fadeLength + 0.12) * 1000);
 }
 
 function hasWon() {
@@ -156,6 +165,8 @@ function endGame(won) {
   renderKeyboard();
 
   if (won) {
+    successStickerEl.setAttribute("aria-hidden", "false");
+    playRightTone();
     setStatus("Gewonnen", "Stark geraten. Noch eine Runde?");
     hintEl.textContent = `Das Wort war: ${answer}`;
   } else {
@@ -203,6 +214,7 @@ function startRound() {
   maxMistakes = difficulties[difficultyEl.value].maxMistakes;
   isGameOver = false;
   failStickerEl.setAttribute("aria-hidden", "true");
+  successStickerEl.setAttribute("aria-hidden", "true");
   stage.classList.remove("is-won", "is-lost", "is-building-gallows");
   stage.classList.toggle("is-building-gallows", Boolean(difficulties[difficultyEl.value].gallowsMistakes));
   setStatus("Bereit", `Modus ${difficulties[difficultyEl.value].label}: Errate das Wort.`);
