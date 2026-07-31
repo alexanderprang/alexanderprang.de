@@ -6,14 +6,15 @@
     <title>Alexander Prang</title>
     <style>
       :root {
-        color-scheme: light;
-        --ink: #19202a;
-        --paper: #fffaf0;
-        --surface: #ffffff;
-        --line: #d9d2c3;
-        --accent: #0b6b68;
-        --accent-strong: #064d4a;
-        --shadow: 0 24px 80px rgba(31, 39, 49, 0.16);
+        color-scheme: dark;
+        --ink: #eaf2ff;
+        --muted: #7f93b8;
+        --paper: #0a1120;
+        --surface: #101b30;
+        --line: #24365a;
+        --accent: #5ad1e6;
+        --accent-strong: #8be9ff;
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
       }
 
       * {
@@ -21,43 +22,113 @@
       }
 
       body {
+        position: relative;
         display: grid;
         min-height: 100vh;
         margin: 0;
         padding: 32px;
         place-items: center;
+        overflow: hidden;
         color: var(--ink);
         font-family:
-          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
+          "JetBrains Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
         background:
-          radial-gradient(circle at 18% 12%, rgba(245, 184, 75, 0.24), transparent 28rem),
-          linear-gradient(135deg, #e9f4ef 0%, var(--paper) 46%, #e8eef7 100%);
+          radial-gradient(circle at 20% 15%, rgba(90, 209, 230, 0.14), transparent 40rem),
+          radial-gradient(circle at 85% 80%, rgba(139, 233, 255, 0.1), transparent 36rem),
+          linear-gradient(180deg, #070c18 0%, var(--paper) 100%);
+      }
+
+      .grid-overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(90, 209, 230, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(90, 209, 230, 0.06) 1px, transparent 1px);
+        background-size: 42px 42px;
+      }
+
+      .formula {
+        position: absolute;
+        color: var(--accent);
+        opacity: 0.16;
+        font-size: clamp(1.1rem, 2.4vw, 1.8rem);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        pointer-events: none;
+        user-select: none;
       }
 
       .card {
-        width: min(420px, 100%);
+        position: relative;
+        z-index: 1;
+        width: min(440px, 100%);
         padding: clamp(28px, 5vw, 44px);
         text-align: center;
-        border: 1px solid rgba(25, 32, 42, 0.12);
+        border: 1px solid var(--line);
         border-radius: 8px;
-        background: rgba(255, 255, 255, 0.82);
+        background: rgba(16, 27, 48, 0.82);
+        backdrop-filter: blur(6px);
         box-shadow: var(--shadow);
+      }
+
+      .atom {
+        width: 96px;
+        height: 96px;
+        margin: 0 auto 20px;
+        overflow: visible;
+      }
+
+      .atom .nucleus {
+        fill: var(--accent-strong);
+        filter: drop-shadow(0 0 6px rgba(139, 233, 255, 0.8));
+      }
+
+      .atom .orbit {
+        fill: none;
+        stroke: var(--line);
+        stroke-width: 1.5;
+      }
+
+      .atom .electron {
+        fill: var(--accent);
+        filter: drop-shadow(0 0 4px rgba(90, 209, 230, 0.9));
+      }
+
+      .atom .orbit-group {
+        transform-origin: 50px 50px;
+        animation: spin 6s linear infinite;
+      }
+
+      .atom .orbit-group.o2 {
+        animation-duration: 9s;
+        animation-direction: reverse;
+      }
+
+      .atom .orbit-group.o3 {
+        animation-duration: 13s;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
       }
 
       .eyebrow {
         margin: 0 0 4px;
         color: var(--accent);
-        font-size: 0.78rem;
-        font-weight: 800;
-        letter-spacing: 0.08em;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
       }
 
       h1 {
         margin: 0 0 24px;
-        font-size: clamp(1.8rem, 5vw, 2.6rem);
+        font-size: clamp(1.7rem, 5vw, 2.4rem);
         line-height: 1.05;
+        letter-spacing: -0.01em;
       }
 
       nav {
@@ -71,8 +142,8 @@
         border-radius: 8px;
         color: var(--accent-strong);
         text-decoration: none;
-        font-weight: 800;
-        background: var(--surface);
+        font-weight: 700;
+        background: rgba(90, 209, 230, 0.06);
         transition:
           transform 160ms ease,
           border-color 160ms ease,
@@ -82,12 +153,43 @@
       .menu-link:hover {
         transform: translateY(-1px);
         border-color: var(--accent);
-        background: #f2fbf8;
+        background: rgba(90, 209, 230, 0.14);
+      }
+
+      @media (max-width: 480px) {
+        .formula {
+          display: none;
+        }
       }
     </style>
   </head>
   <body>
+    <div class="grid-overlay" aria-hidden="true"></div>
+
+    <span class="formula" style="top: 12%; left: 8%;" aria-hidden="true">E = mc²</span>
+    <span class="formula" style="top: 20%; right: 10%;" aria-hidden="true">F = ma</span>
+    <span class="formula" style="bottom: 16%; left: 12%;" aria-hidden="true">λ = h / p</span>
+    <span class="formula" style="bottom: 22%; right: 8%;" aria-hidden="true">ΔS ≥ 0</span>
+    <span class="formula" style="top: 48%; left: 4%;" aria-hidden="true">∇ · E = ρ/ε₀</span>
+    <span class="formula" style="top: 55%; right: 4%;" aria-hidden="true">ψ(x, t)</span>
+
     <div class="card">
+      <svg class="atom" viewBox="0 0 100 100" aria-hidden="true">
+        <g class="orbit-group o1">
+          <ellipse class="orbit" cx="50" cy="50" rx="42" ry="18" />
+          <circle class="electron" cx="92" cy="50" r="3.5" />
+        </g>
+        <g class="orbit-group o2">
+          <ellipse class="orbit" cx="50" cy="50" rx="42" ry="18" transform="rotate(60 50 50)" />
+          <circle class="electron" cx="50" cy="50" r="3.5" transform="rotate(60 50 50) translate(42 0)" />
+        </g>
+        <g class="orbit-group o3">
+          <ellipse class="orbit" cx="50" cy="50" rx="42" ry="18" transform="rotate(120 50 50)" />
+          <circle class="electron" cx="50" cy="50" r="3.5" transform="rotate(120 50 50) translate(42 0)" />
+        </g>
+        <circle class="nucleus" cx="50" cy="50" r="6" />
+      </svg>
+
       <p class="eyebrow">Willkommen</p>
       <h1>Alexander Prang</h1>
 
