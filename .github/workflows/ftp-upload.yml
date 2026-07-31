@@ -14,6 +14,22 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      # Verwaiste Dateien aus alter Root-Struktur entfernen (jetzt unter games/)
+      - name: Remove orphaned root files
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 22
+          script: |
+            rm -f /alexanderprang.de/httpdocs/index.html \
+                  /alexanderprang.de/httpdocs/styles.css \
+                  /alexanderprang.de/httpdocs/script.js \
+                  /alexanderprang.de/httpdocs/galgenmaennchen.html \
+                  /alexanderprang.de/httpdocs/tictactoe.html \
+                  /alexanderprang.de/httpdocs/tictactoe.js
+
       # Dateien über SFTP hochladen
       - name: Upload files via SFTP
         uses: appleboy/scp-action@v0.1.5
